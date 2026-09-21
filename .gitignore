@@ -1,0 +1,42 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Expo / React Native
+.expo/
+dist/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# iOS / Android build output
+ios/
+android/
+apps/mobile/ios/
+apps/mobile/android/
+
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# EAS
+.eas/
+
+# Env / secrets — never commit
+.env
+.env.*
+*.pem
+google-services.json
+GoogleService-Info.plist
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/

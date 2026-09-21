@@ -1,0 +1,1 @@
+{"name":"dalex","private":true,"scripts":{"lint":"npm run lint --workspaces --if-present"},"version":"0.1.0","workspaces":["apps/*","packages/*"]}

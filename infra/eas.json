@@ -1,0 +1,1 @@
+{"build":{"development":{"channel":"dev","developmentClient":true,"distribution":"internal"},"preview":{"channel":"preview","distribution":"internal"},"production":{"autoIncrement":true,"channel":"production"}},"cli":{"appVersionSource":"local"},"submit":{"production":{}}}

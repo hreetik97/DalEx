@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function validMethod(m) {
+      return m in ['upi', 'card', 'netbanking', 'cash'];
+    }
+
+    function validCategory(c) {
+      return c in ['food', 'groceries', 'transport', 'shopping', 'bills',
+                   'health', 'entertainment', 'travel', 'education', 'other'];
+    }
+
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+
+      match /transactions/{txnId} {
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid)
+          && request.resource.data.amountPaise is int
+          && request.resource.data.amountPaise >= 0
+          && validMethod(request.resource.data.method)
+          && validCategory(request.resource.data.category);
+        allow update, delete: if isOwner(uid);
+      }
+
+      // Trigger-maintained and user-written docs: owner only.
+      match /{collection}/{docId} {
+        allow read, write: if isOwner(uid)
+          && collection in ['plans', 'digests', 'dailyTotals', 'budgets', 'bills'];
+      }
+    }
+  }
+}
