@@ -1,1 +1,1 @@
-{"firestore":{"indexes":"firestore.indexes.json","rules":"firestore.rules"},"functions":[{"codebase":"default","ignore":["node_modules",".git","*.log"],"source":"../apps/functions"}]}
+{"emulators":{"firestore":{"port":8080}},"firestore":{"indexes":"firestore.indexes.json","rules":"firestore.rules"},"functions":[{"codebase":"default","ignore":["node_modules",".git","*.log"],"source":"../apps/functions"}]}

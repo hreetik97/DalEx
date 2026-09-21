@@ -13,7 +13,7 @@ hisab/
     src/theme.js          # DESIGN.md tokens
     app.json              # newArchEnabled, plugins, googleServices files
     eas.json
-  apps/functions/         # Cloud Functions (Node 20, firebase-functions v6, 2nd-gen)
+  apps/functions/         # Cloud Functions (Node 22, firebase-functions v6, 2nd-gen)
     src/scheduledDigest.ts
     src/onTransactionWrite.ts
     src/deleteAccount.ts
@@ -52,8 +52,9 @@ users/{uid}/digests/{yyyy-MM-dd}      { totalPaise, txnCount, byCategory{}, byMe
                                         plannedPaise, variancePaise,
                                         topMerchants: [{merchant,totalPaise,count}] (≤5), sentAt }
 users/{uid}/dailyTotals/{yyyy-MM-dd}  { totalPaise, txnCount, byCategory{}, byMethod{} }  # trigger-maintained
-users/{uid}/budgets/{categoryId}       { monthPaise, spentPaise }                            # trigger-maintained
-users/{uid}/bills/{billId}            { name, amountPaise, dueDay, autopay: bool, category }
+users/{uid}/budgets/{categoryId}       { monthPaise, spentPaise, monthKey: "yyyy-MM" }        # trigger-maintained, month-scoped
+users/{uid}/bills/{billId}            { name, amountPaise, dueDay, autopay: bool, category, isSubscription? }
+users/{uid}/goals/{goalId}            { name, targetPaise: int > 0, savedPaise: int ≥ 0, hue?, icon?, createdAt, updatedAt }
 ```
 
 **Security rules** (`infra/firestore.rules`): default-deny; `users/{uid}/**` readable/writable only by `request.auth.uid == uid`; `transactions` create-validates `amountPaise is int ≥ 0`, `method` in enum, `category` in taxonomy. Rules are tested in CI with the Emulator Suite (`@firebase/rules-unit-testing`).
@@ -67,11 +68,16 @@ users/{uid}/bills/{billId}            { name, amountPaise, dueDay, autopay: bool
 | Function | Trigger | Job |
 |---|---|---|
 | `scheduledDigest` | `onSchedule("every 15 min", asia-south1, Asia/Kolkata)` | Users past `digestTime` with no digest today → aggregate → write `digests/{date}` → FCM data+notification message |
-| `onTransactionWrite` | `onDocumentCreated/Updated/Deleted` on `transactions/{txnId}` | Recompute `dailyTotals/{date}` + `budgets/{cat}.spentPaise` with `increment()`; idempotent |
+| `onTransactionWrite` | `onDocumentCreated/Updated/Deleted` on `transactions/{txnId}` | Maintain `dailyTotals/{date}` + `budgets/{cat}.spentPaise` with `increment()`; idempotent; **month-scoped** — first write of a new IST month resets `spentPaise` to 0 (transaction-guarded `monthKey`) |
 | `deleteAccount` | `onCall` (authed) | Wipe `users/{uid}` subtree + delete Auth user (DPDP erasure; used by in-app + web flows) |
 | `cleanupTokens` | `onSchedule("daily")` | Drop FCM tokens with repeated `NotRegistered` |
 
 No function handles raw SMS (on-device only, Phase 2) or full email bodies (Phase 3+ polling stores parsed fields only).
+
+**Conventions (locked):**
+- `variancePaise = totalPaise − plannedPaise` in digests (positive = overspent).
+- Digest delivery is at-most-once per user per day: the run claims `digests/{date}` inside a Firestore transaction before sending FCM; a failed run marks `status: "failed"` and later runs skip that day (no double-send).
+- FCM tokens live in a `fcmTokens` **map on the user doc** (`{ token: { platform, updatedAt, failures, lastFailureAt, lastFailureCode } }`), written with `FieldPath` (token strings are unsafe in dot-notation paths). `scheduledDigest` prunes permanent `NotRegistered`/`Unregistered` tokens immediately; `cleanupTokens` is the daily safety net (≥3 consecutive failures).
 
 ## 5. Auth model
 

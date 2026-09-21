@@ -1,0 +1,78 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  install:
+    name: install all workspaces (root npm ci)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+
+  mobile:
+    name: mobile (lint, typecheck, doctor, web export)
+    runs-on: ubuntu-latest
+    needs: install
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npx expo lint
+      - run: npx tsc --noEmit
+      - run: npx expo-doctor
+      - run: npx expo export --platform web
+
+  functions:
+    name: functions (build, test)
+    runs-on: ubuntu-latest
+    needs: install
+    defaults:
+      run:
+        working-directory: apps/functions
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npm test
+
+  rules:
+    name: firestore rules (emulator tests)
+    runs-on: ubuntu-latest
+    needs: install
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci --ignore-scripts
+      - run: npx firebase emulators:exec --only firestore "npx jest firestore.rules.test.ts"

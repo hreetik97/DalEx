@@ -1,32 +1,63 @@
 {
   "expo": {
-    "name": "Hisab",
-    "slug": "hisab-app",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
-    "scheme": "hisab",
-    "experiments": {
-      "typedRoutes": true
-    },
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
+        "foregroundImage": "./assets/android-icon-foreground.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+      },
+      "googleServicesFile": "./google-services.json",
+      "package": "app.dalex.mobile"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "experiments": {
+      "typedRoutes": true
     },
+    "icon": "./assets/icon.png",
+    "ios": {
+      "bundleIdentifier": "app.dalex.mobile",
+      "entitlements": {
+        "aps-environment": "development"
+      },
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
+      },
+      "supportsTablet": true,
+      "usesAppleSignIn": true
+    },
+    "name": "Hisab",
+    "orientation": "portrait",
     "plugins": [
       "expo-router",
-      "expo-status-bar"
-    ]
+      "expo-status-bar",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/messaging",
+      "react-native-nitro-google-signin",
+      "expo-apple-authentication",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "dynamic"
+          }
+        }
+      ],
+      "@react-native-community/datetimepicker",
+      "expo-sharing"
+    ],
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
+    "scheme": "hisab",
+    "slug": "hisab-app",
+    "userInterfaceStyle": "dark",
+    "version": "1.0.0",
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
   }
 }

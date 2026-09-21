@@ -27,9 +27,9 @@ If the loop works, there are no more surprise bills.
 | 2 | Design language? | Dark "Liquid Glass" (iOS-26-style): frosted BlurView cards, ambient gradient orbs, floating glass tab bar. **Hree likes it — keep it.** | 2026-09-21 |
 | 3 | Tabs? | Home, Insights, Budgets, Bills, History — floating 5-tab bar | 2026-09-21 |
 | 4 | Design-first or production-first? | Design first (done) → now production planning | 2026-09-21 |
-| 5 | Backend? | **Firebase**: Spark free tier, Firestore in `asia-south1` (Mumbai), Cloud Functions, FCM. Blaze only when phone OTP or quota headroom demands it | 2026-09-21 |
+| 5 | Backend? | **Firebase**: Spark free tier, Firestore in `asia-south1` (Mumbai), Cloud Functions, FCM. Blaze only when phone OTP or quota headroom demands it. **SUPERSEDED by row 15** — guarded Blaze from day one (Functions can't deploy on Spark) | 2026-09-21 |
 | 6 | Auth V1? | Google Sign-In (free). Apple Sign-In before iOS submission. Phone OTP **deferred** to Phase 3+ (needs Blaze + per-SMS billing) | 2026-09-21 |
-| 7 | Transaction ingestion? | **Four sources**: manual entry (Phase 1) + on-device SMS parsing (Android, Phase 2) + Gmail transaction alerts (both platforms, Phase 2) + bank sync via Account Aggregator TSP partner e.g. Setu/Finvu (both platforms, Phase 2). Cross-source **dedupe engine** | 2026-09-21 |
+| 7 | Transaction ingestion? | **Four sources**: manual entry (Phase 1) + on-device SMS parsing (Android, Phase 2) + Gmail transaction alerts (both platforms, Phase 2) + bank sync via Account Aggregator TSP partner e.g. Setu/Finvu (both platforms, Phase 2). Cross-source **dedupe engine**. **SUPERSEDED by row 19** — Gmail deferred to Phase 3+ (demand-gated); AA after product-market fit | 2026-09-21 |
 | 8 | iOS SMS? | **Impossible** — Apple provides no SMS API. iOS gets email + bank + manual | 2026-09-21 |
 | 9 | Bank scraping? | **Forbidden** — no credential-based scraping. AA network only | 2026-09-21 |
 | 10 | Money storage? | Integer paise, never floats | 2026-09-21 |

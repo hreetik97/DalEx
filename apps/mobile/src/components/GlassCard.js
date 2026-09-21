@@ -4,7 +4,7 @@ import { colors, floatShadow } from '../theme';
 
 // Frosted glass card. Wraps children in a BlurView with a hairline
 // highlight border and soft float shadow.
-export default function GlassCard({ children, style, strong, intensity = 42 }) {
+export default function GlassCard({ children, style, strong = false, intensity = 42 }) {
   return (
     <BlurView
       intensity={intensity}

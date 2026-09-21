@@ -37,6 +37,23 @@ service cloud.firestore {
         allow read, write: if isOwner(uid)
           && collection in ['plans', 'digests', 'dailyTotals', 'budgets', 'bills'];
       }
+
+      match /goals/{goalId} {
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid)
+          && request.resource.data.name is string
+          && request.resource.data.name.size() > 0
+          && request.resource.data.targetPaise is int
+          && request.resource.data.targetPaise > 0
+          && request.resource.data.savedPaise is int
+          && request.resource.data.savedPaise >= 0;
+        allow update: if isOwner(uid)
+          && request.resource.data.targetPaise is int
+          && request.resource.data.targetPaise > 0
+          && request.resource.data.savedPaise is int
+          && request.resource.data.savedPaise >= 0;
+        allow delete: if isOwner(uid);
+      }
     }
   }
 }

@@ -32,7 +32,7 @@ Indians make dozens of small UPI, credit-card, and RuPay credit-card payments ev
 - **Native Firebase:** `@react-native-firebase/app`, `/auth`, `/firestore`, `/messaging` (v26.x, pinned patch) — dev build required, Expo Go incompatible
 - **Auth:** `react-native-nitro-google-signin` (One Tap / Credential Manager) + `expo-apple-authentication` (Apple Sign-In is **mandatory** alongside Google per App Store Guideline 4.8)
 - **Forms:** `react-hook-form` + `zod` for add-transaction, budget, and bill forms
-- **Functions:** firebase-functions v6, Node 20, region `asia-south1`, 2nd-gen (`onSchedule`, `onDocumentCreated/Updated/Deleted`, `onRequest`)
+- **Functions:** firebase-functions v6, Node 22, region `asia-south1`, 2nd-gen (`onSchedule`, `onDocumentCreated/Updated/Deleted`, `onRequest`)
 - **Testing:** jest (Functions), `@firebase/rules-unit-testing` + Emulator Suite (rules), Maestro (e2e)
 - **Builds:** EAS (development / preview / production profiles), `runtimeVersion: { policy: "fingerprint" }`
 
