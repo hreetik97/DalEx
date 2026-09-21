@@ -89,3 +89,4 @@
 | 2026-09-21 | Production planning | Architecture, Firebase decision, Phase 1 spec, 4-source ingestion, docs OS kickoff |
 | 2026-09-22 | Wave 1: CI + infra testing | `.github/workflows/ci.yml` (mobile/functions/rules), 19 Firestore rules tests passing, branch protection on `main` |
 | 2026-09-22 | Full build: waves 1-3 + integration | Functions TS rewrite, Firebase auth/consent/repo layer, all screens on live data, goals/CSV/monthly report/budget alerts/morning nudge, month-scoped budgets, CI repaired, docs reconciled |
+| 2026-09-22 | Post-push CI failure + fix | First `main` push failed 2 CI jobs: `apps/functions/.gitignore` `lib/` swallowed `src/lib/*.ts` (build broke in CI) → scoped to `/lib/` and committed the helpers; infra rules job lacked `@types/jest` (standalone `npm ci`, not a workspace) → added devDep. Fix commit `2f7b39c`; CI fully green on all 4 jobs |
