@@ -1,0 +1,15 @@
+# Firebase project aliases for the Hisab backend.
+#
+# Copy this file to `.firebaserc` (gitignored) and fill in your real project IDs:
+#   cp .firebaserc.example .firebaserc
+#
+# Keeping `.firebaserc` local (not committed) means each environment's project
+# mapping lives with the person doing the deploy, not in the shared repo.
+# `infra/deploy.sh` also accepts a project ID directly and does not need this file.
+{
+  "projects": {
+    "dev": "hisab-dev-XXXX",
+    "staging": "hisab-staging-XXXX",
+    "production": "hisab-prod-XXXX"
+  }
+}

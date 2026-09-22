@@ -1,0 +1,3 @@
+# Local-only Firebase state: project aliases live with the deployer, not the repo.
+# See .firebaserc.example for the template.
+.firebaserc
